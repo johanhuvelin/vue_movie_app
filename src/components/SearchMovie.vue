@@ -9,10 +9,17 @@
       </v-progress-circular>
     </div>
   </v-container>
+
+  <v-container v-else-if="noData">
+    <div class="text-xs-center">
+      <h2>No Movie in API with {{this.name}}</h2>
+    </div>
+  </v-container>
+
   <v-container v-else grid-list-xl>
     <v-layout wrap>
       <v-flex xs4
-              v-for="(item, index) in wholeResponse"
+              v-for="(item, index) in movieResponse"
               :key="index"
               mb-2>
         <v-card>
@@ -20,6 +27,7 @@
             :src="item.Poster"
             aspect-ratio="1"
           ></v-img>
+
           <v-card-title primary-title>
             <div>
               <h2>{{item.Title}}</h2>
@@ -28,12 +36,14 @@
               <div>IMDB-id: {{item.imdbID}}</div>
             </div>
           </v-card-title>
+
           <v-card-actions class="justify-center">
-            <v-btn rounded
+            <v-btn flat
                    color="green"
                    @click="singleMovie(item.imdbID)"
             >View</v-btn>
           </v-card-actions>
+
         </v-card>
       </v-flex>
     </v-layout>
@@ -44,30 +54,47 @@
 import axios from 'axios'
 
 export default {
-  name: 'LatestMovie',
+  name: 'SearchMovie',
+  props: ['name'],
   data () {
     return {
-      wholeResponse: [],
-      loading: true
+      movieResponse: [],
+      loading: true,
+      noData: false
     }
-  },
-  mounted () {
-    axios
-      .get('http://www.omdbapi.com/?s=star&apikey=9b29d3e2&page=1&type=movie&Content-Type=application/json')
-      .then(response => {
-        this.wholeResponse = response.data.Search
-        this.loading = false
-      })
-      .catch(error => {
-        console.log(error)
-      })
   },
   methods: {
     singleMovie (id) {
       this.$router.push('/movie/' + id)
+    },
+    fetchResult (value) {
+      axios
+        .get('http://www.omdbapi.com/?s=' + value + '&apikey=9b29d3e2&page=1&type=movie&Content-Type=application/json')
+        .then(response => {
+          if (response.data.Response === 'True') {
+            this.movieResponse = response.data.Search
+            this.loading = false
+            this.noData = false
+          } else {
+            this.noData = true
+            this.loading = false
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  },
+  mounted () {
+    this.fetchResult(this.name)
+  },
+  watch: {
+    name (value) {
+      this.fetchResult(value)
     }
   }
 }
+
 </script>
 
 <style lang="stylus" scoped>
