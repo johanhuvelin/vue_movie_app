@@ -53,7 +53,7 @@ export default {
   },
   mounted () {
     axios
-      .get('http://www.omdbapi.com/?s=star&apikey=9b29d3e2&page=1&type=movie&Content-Type=application/json')
+      .get('https://www.omdbapi.com/?s=star&apikey=9b29d3e2&page=1&type=movie&Content-Type=application/json')
       .then(response => {
         this.wholeResponse = response.data.Search
         this.loading = false

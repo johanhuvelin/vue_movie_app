@@ -101,7 +101,7 @@ export default {
   },
   mounted () {
     axios
-      .get('http://www.omdbapi.com/?apikey=9b29d3e2&i=' + this.id + '&Content-Type=application/json')
+      .get('https://www.omdbapi.com/?apikey=9b29d3e2&i=' + this.id + '&Content-Type=application/json')
       .then(response => {
         this.singleMovie = response.data
         this.ratings = this.singleMovie.Ratings
