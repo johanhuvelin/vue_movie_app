@@ -69,7 +69,7 @@ export default {
     },
     fetchResult (value) {
       axios
-        .get('http://www.omdbapi.com/?s=' + value + '&apikey=9b29d3e2&page=1&type=movie&Content-Type=application/json')
+        .get('https://www.omdbapi.com/?s=' + value + '&apikey=9b29d3e2&page=1&type=movie&Content-Type=application/json')
         .then(response => {
           if (response.data.Response === 'True') {
             this.movieResponse = response.data.Search
